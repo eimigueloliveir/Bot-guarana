@@ -14,7 +14,7 @@ while (true)
     {
         SearchTweetsV2Response search = await client.SearchV2.SearchTweetsAsync("guarana");
         TweetV2 tweet = search.Tweets.First();
-        if (tweet.Text.Contains("guarana") || tweet.Text.Contains("guaraná"))
+        if (tweet.Text.Contains("guarana") || tweet.Text.Contains("guaraná") && tweet.InReplyToUserId != "118724265")
         {
             await client.Tweets.PublishRetweetAsync(long.Parse(tweet.Id));
             Console.WriteLine($"{tweet.Id} Retweeted");
