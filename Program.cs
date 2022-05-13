@@ -13,14 +13,17 @@ while (true)
     try
     {
         SearchTweetsV2Response search = await client.SearchV2.SearchTweetsAsync("guarana");
-        TweetV2 tweet = search.Tweets.First();
-        if (tweet.Text.Contains("guarana") || tweet.Text.Contains("guaraná") && tweet.InReplyToUserId != "118724265")
+        TweetV2[] tweet = search.Tweets;
+        for (int i = 0; i < tweet.Length; i++)
         {
-            await client.Tweets.PublishRetweetAsync(long.Parse(tweet.Id));
-            Console.WriteLine($"{tweet.Id} Retweeted");
-            await client.Tweets.FavoriteTweetAsync(long.Parse(tweet.Id));
-            Console.WriteLine($"{tweet.Id} Favorited");
-            Thread.Sleep(36000);
+            if (tweet[i].Text.Contains("guarana") || tweet[i].Text.Contains("guaraná"))
+            {
+                await client.Tweets.PublishRetweetAsync(long.Parse(tweet[i].Id));
+                Console.WriteLine($"{i}-{tweet[i].Id} Retweeted");
+                await client.Tweets.FavoriteTweetAsync(long.Parse(tweet[i].Id));
+                Console.WriteLine($"{i}-{tweet[i].Id} Favorited");
+                Thread.Sleep(36000);
+            }
         }
     }
     catch (Exception ex)
